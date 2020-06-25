@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -49,9 +50,30 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.Contains(value, System.StringComparison.CurrentCultureIgnoreCase))
                 {
                     jobs.Add(row);
+                }
+            }
+
+            return jobs;
+        }
+
+        public static List<Dictionary<string, string>> FindByValue(string value)
+        {
+            LoadData();
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> row in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> entry in row)
+                {
+                    if (entry.Value.Contains(value, System.StringComparison.CurrentCultureIgnoreCase) && !jobs.Contains(row))
+                    {
+                        jobs.Add(row);
+                        break;
+                    }
                 }
             }
 
